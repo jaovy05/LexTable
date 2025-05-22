@@ -59,13 +59,15 @@ def make():
                 elif res == 'c':
                     ltable.complete.append(f'I{i}')
                 else:
+                    if f'I{j}' not in ltable.transactions:
+                        ltable.transactions[f'I{j}'] = {}
                     ltable.transactions[f'I{j}'][p[cpos]] = f'I{i}'
         j += 1
         
     ltable.closure = closure
     print_colored_closure(ltable.closure)
-    print(f'completos: {ltable.complete}')
-    print(f'Aceita: {ltable.accept}')
+    # print(f'completos: {ltable.complete}')
+    # print(f'Aceita: {ltable.accept}')
 
 def goto(I,X, productions, tratados):
     res = 'n'
@@ -99,9 +101,18 @@ def goto(I,X, productions, tratados):
 def print_colored_closure(closure):
     RED = "\033[91m"
     RESET = "\033[0m"
+    PURPLE = "\033[95m"
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
 
     for chave, producoes in closure.items():
-        print(f"{chave}: [", end="")
+        if chave in ltable.complete:
+            print(f"{GREEN + chave + RESET}: [", end="")
+        elif chave == ltable.accept:
+            print(f"{BLUE + chave + RESET}: [", end="")
+        else:
+            print(f"{chave}: [", end="")
+
         linhas = []
         for prod in producoes:
             linha = []
@@ -111,7 +122,7 @@ def print_colored_closure(closure):
                 else:
                     linha.append(token)
             linhas.append(" ".join(linha))
-        print(", ".join(f"[{linha}]" for linha in linhas), end="")
+        print(F",".join(f"{PURPLE}[{RESET}{linha}{PURPLE}]{RESET}" for linha in linhas), end="")
         print("]")
 
 
